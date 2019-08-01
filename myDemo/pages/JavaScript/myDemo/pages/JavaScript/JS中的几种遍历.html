@@ -1,0 +1,130 @@
+<html>
+
+<head>
+    <title>JS中的几种遍历</title>
+</head>
+
+<body>
+
+    <script>
+        // 遍历性能排序：优化版for循环 > forEach() > some() = every() = filter() > 普通版for循环 > map() > for...of...遍历 > for...in...遍历
+        let num = 0;
+        let curArr = [...Array(1000000).keys()];   // 效率不及for循环
+
+        /**
+         * 普通版for循环
+         * 描述：最简单的一种
+         * 优点：性能较高，不及优化版for循环。  运行1000000次平均耗时：20ms
+         * 特点：可以正确响应break、continue和return语句
+         **/
+        console.time('common for');
+        for (let i = 0; i < curArr.length; i++) {
+            num++;
+        }
+        console.timeEnd('common for');
+
+        /**
+         * 优化版for循环
+         * 描述：使用临时变量，将长度缓存起来，避免重复获取数组长度，当数组较大时优化效果才会比较明显
+         * 优点：性能最高。 运行1000000次平均耗时：5ms
+         * 特点：可以正确响应break、continue和return语句
+         **/
+        console.time('optimize for');
+        for (let i = 0, len = curArr.length; i < len; i++) {
+            num++;
+        }
+        console.timeEnd('optimize for');
+
+        /**
+         * for...in...遍历
+         * 描述：更多是用来遍历对象，很少用来遍历数组
+         * 优点：不建议遍历数组，性能最低。 运行1000000次平均耗时：150-200ms
+         * 特点：可以正确响应break语句
+         **/
+        console.time('for in');
+        for (let key in curArr) {
+            num++;
+        }
+        console.timeEnd('for in');
+
+        /**
+         * forEach()
+         * 描述：遍历便捷，对目标数组的操作人性化
+         * 优点：性能较高，优于普通for循环。 运行1000000次平均耗时：20ms
+         * 特点：return语句会跳过本次循环，进行后续循环
+         **/
+        console.time('forEach');
+        curArr.forEach((item, index, arr) => {
+            num++;
+        });
+        console.timeEnd('forEach');
+
+        /**
+         * for...of...遍历
+         * 描述：这是最简洁、最直接的遍历数组元素的语法，避开了for-in循环的所有缺陷
+         * 优点：性能一般，优于for in，不及普通for循环。    运行1000000次平均耗时：40-50ms
+         * 特点：可以正确响应break、continue和return语句
+         **/
+        console.time('for of');
+        for (let item of curArr) {
+            num++;
+        }
+        console.timeEnd('for of');
+
+        /**
+         * map()
+         * 描述：map() 方法返回一个新数组，数组中的元素为原始数组元素调用函数处理后的值。
+         * 优点：性能一般，不及forEach。    运行1000000次平均耗时：20-30ms
+         * 特点：
+         **/
+        console.time('map');
+        curArr.map((item, index, arr) => {
+            num++;
+        });
+        console.timeEnd('map');
+
+        /**
+         * some()
+         * 描述：some()作为一个用来检测数组是否满足一些条件的函数存在。 
+         *      它会依次执行数组的每个元素，
+         *      如果有一个元素满足条件，则表达式返回true , 剩余的元素不会再执行检测，
+         *      如果没有满足条件的元素，则返回false。
+         * 优点：性能较好，优于普通for循环，不及forEach。   运行1000000次平均耗时：19-28ms
+         * 特点：
+         **/
+        console.time('some');
+        curArr.some((item, index, arr) => {
+            num++;
+        });
+        console.timeEnd('some');
+
+        /**
+         * every()
+         * 描述：every() 方法用于检测数组所有元素是否都符合指定条件。
+         *      它会依次执行数组的每个元素，
+         *      如果数组中检测到有一个元素不满足，则整个表达式返回 false ，且剩余的元素不会再进行检测，
+         *      如果所有元素都满足条件，则返回 true。
+         * 优点：性能同some()。   运行1000000次平均耗时：19-28ms
+         * 特点：
+         **/
+        console.time('every');
+        curArr.every((item, index, arr) => {
+            if (item > -1) return true;
+        });
+        console.timeEnd('every');
+
+        /**
+         * filter()
+         * 描述：filter() 方法创建一个新的数组，新数组中的元素是通过检查指定数组中符合条件的所有元素。
+         * 优点：性能同some()。   运行1000000次平均耗时：19-28ms
+         * 特点：
+         **/
+         console.time('filter');
+        curArr.filter((item, index, arr) => {
+            num++;
+        });
+        console.timeEnd('filter');
+    </script>
+</body>
+
+</html>
